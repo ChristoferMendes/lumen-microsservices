@@ -74,10 +74,10 @@ class BookController extends Controller
         $book = Book::findOrFail($id);
 
         $rules = [
-            'title' => 'required|max:255',
-            'description' => 'required|max:255',
-            'price' => 'required|min:1',
-            'author_id' => 'required|min:1',
+            'title' => 'max:255',
+            'description' => 'max:255',
+            'price' => 'min:1',
+            'author_id' => 'min:1',
         ];
 
         $this->validate($request, $rules);
@@ -99,7 +99,11 @@ class BookController extends Controller
      * @return Illuminate\Http\Response
      */
     public function destroy($id) {
-       
+       $book = Book::findOrFail($id);
+
+       $book->delete();
+
+       return $this->successResponse($book);
     }
     
 }

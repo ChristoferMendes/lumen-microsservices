@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\BookService;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller;
@@ -9,15 +11,24 @@ use Laravel\Lumen\Routing\Controller;
 class BookController extends Controller
 {
 
+    use ApiResponser;
+
+    /**
+     * The service to consume the books microsservice
+     *
+     * @var BookService
+     */
+    public $bookService;
+
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(BookService $bookService)
     {
-        //
+        $this->bookService = $bookService;
     }
 
     /**
@@ -26,7 +37,7 @@ class BookController extends Controller
      * @return Response
      */
     public function index() {
-      
+      return $this->successResponse($this->bookService->obtainBooks());
     }
 
     /**

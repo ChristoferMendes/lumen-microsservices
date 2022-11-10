@@ -2,70 +2,75 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Author;
 use App\Traits\ApiResponser;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-use Laravel\Lumen\Routing\Controller;
+use App\Services\AuthorService;
+use Illuminate\Http\Response;
 
 class AuthorController extends Controller
 {
+    use ApiResponser;
 
+    /**
+     * The service to consume the authors microservice
+     * @var AuthorService
+     */
+    public $authorService;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(AuthorService $authorService)
     {
-        //
+        $this->authorService = $authorService;
     }
 
     /**
      * Return the list of authors
-     *
-     * @return Response
-     */
-    public function index() {
-      
-    }
-
-    /**
-     * Create an author
-     *
-     * @return Response
-     */
-    public function store(Request $request) {
-       
-    }
-
-    /**
-     * Show details of an existing author
-     *
      * @return Illuminate\Http\Response
      */
-    public function show($id) {
-       
-      
+    public function index()
+    {
+        return $this->successResponse($this->authorService->obtainAuthors());
     }
 
     /**
-     * Modify an existing author
-     *
+     * Create one new author
      * @return Illuminate\Http\Response
      */
-    public function update($id, Request $request) {
-       
+    public function store(Request $request)
+    {
+        $all = $request->all();
+        return $this->successResponse($this->authorService->createAuthor($all, Response::HTTP_CREATED));
     }
 
     /**
-     * Remove an axisting author
-     *
+     * Obtains and show one author
      * @return Illuminate\Http\Response
      */
-    public function destroy($id) {
-        
+    public function show($id)
+    {
+        return $this->successResponse($this->authorService->obtainAuthor($id));
     }
-    
+
+    /**
+     * Update an existing author
+     * @return Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $data = $request->all();
+        return $this->successResponse($this->authorService->editAuthor($data, $id));
+    }
+
+    /**
+     * Remove an existing author
+     * @return Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        return $this->successResponse($this->authorService->deleteAuthor($id));
+    }
 }

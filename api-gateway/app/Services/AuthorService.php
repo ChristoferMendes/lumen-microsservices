@@ -50,7 +50,7 @@ class AuthorService
      * Update an instance of author using the author service
      * @return string
      */
-    public function editAuthor($data, $id)
+    public function editAuthor($id, $data)
     {
        return $this->performRequest('PUT', "/authors/$id", $data);
     }

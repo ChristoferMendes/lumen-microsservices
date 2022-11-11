@@ -19,6 +19,16 @@ trait ApiResponser {
   }
 
   /**
+  * Build success responses
+  * @param string|array $data
+  * @param int $code
+  * @return Response
+  */
+  public function validResponse($data, $code = Response::HTTP_OK) {
+    return response()->json(['data' => $data], $code);
+  }
+
+  /**
   * Build error responses
   * @param string|array $message
   * @param int $code

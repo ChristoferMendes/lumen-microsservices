@@ -3,8 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Response;
 
-class ExampleMiddleware
+class AuthenticateAccess
 {
     /**
      * Handle an incoming request.
@@ -15,6 +16,13 @@ class ExampleMiddleware
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+        $validSecrets = explode(',', env('SECRETS'));
+
+        if (in_array($request->header('Authorization'), $validSecrets)) {
+
+            return $next($request);
+        }
+
+        abort(Response::HTTP_UNAUTHORIZED);
     }
 }
